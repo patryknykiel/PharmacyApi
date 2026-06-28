@@ -7,16 +7,24 @@ namespace Pharmacy.Controllers;
 [Route("[controller]")]
 public class MedicationController : ControllerBase
 {
+    private readonly PharmacyDbContext _context;
+
+    public MedicationController(PharmacyDbContext context)
+    {
+        _context = context;
+    }
+
     [HttpGet]
     public IActionResult Get()
     {
-        return Ok(MedicationData.Medications);
+        var medications = _context.Medication.ToList();
+        return Ok(medications);
     }
 
     [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
-        var medication = MedicationData.Medications.FirstOrDefault(m => m.Id == id);
+        var medication = _context.Medication.FirstOrDefault(m => m.Id == id);
 
         if (medication == null)
         {
